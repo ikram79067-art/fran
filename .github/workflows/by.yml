@@ -1,0 +1,25 @@
+name: Run j
+
+on:
+  push:
+    branches:
+      - main  # Change this to your desired branch, e.g., 'master' or 'main'
+  pull_request:
+    branches:
+      - main  # Adjust this according to your needs
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360  # 6 hours (360 minutes)
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        pip install requests
+
+    - name: Run 
+      run: python none.py
