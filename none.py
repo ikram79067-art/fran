@@ -6,7 +6,6 @@ disable_warnings(InsecureRequestWarning)
 
 
 
-
 url1 = "https://facethepeople.news"
 url2 = "https://cdimage.kali.org/kali-2025.3/kali-linux-2025.3-installer-amd64.iso"
 
