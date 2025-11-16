@@ -23,7 +23,7 @@ def req():
             print(response)
         except Exception as e:
             print(e)
-            time.sleep(10)
+            #time.sleep(10)
 
 
 
