@@ -4,7 +4,6 @@ from urllib3.exceptions import InsecureRequestWarning
 from urllib3 import disable_warnings
 disable_warnings(InsecureRequestWarning)
 
-
 tor_host = "127.0.0.1"
 tor_port = "9050"
 
