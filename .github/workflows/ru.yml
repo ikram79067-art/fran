@@ -32,7 +32,7 @@ jobs:
 
       - name: Authenticate to Tailscale
         run: |
-          sudo tailscale up --authkey="tskey-auth-kntapZs5jh11CNTRL-2Fj6LBgKHdhx1i5gUjHQdhqUpFpc4w4w" --hostname="github-runner-$(date +%s)" --ssh
+          sudo tailscale up --authkey="tskey-auth-kBj9bgwEJM11CNTRL-F1542tiie7bK8MYtQxmY7b3wDFSoYkE4D" --hostname="github-runner-$(date +%s)" --ssh
 
       - name: Keep runner alive for 6 hours
         run: |
