@@ -1,0 +1,40 @@
+name: Tailscale SSH Runner
+
+on:
+  push:
+
+jobs:
+  setup-runner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360   # 6 hours
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create user & add to sudo
+        run: |
+          sudo useradd -m -s /bin/bash customuser
+          echo "customuser ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/customuser
+          echo "customuser:password123" | sudo chpasswd
+
+      - name: Enable SSH server
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-server
+          sudo systemctl enable ssh
+          sudo systemctl start ssh
+          sudo ufw allow ssh || true
+
+      - name: Install Tailscale
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh
+
+      - name: Authenticate to Tailscale
+        run: |
+          sudo tailscale up --authkey="tskey-auth-kntapZs5jh11CNTRL-2Fj6LBgKHdhx1i5gUjHQdhqUpFpc4w4w" --hostname="github-runner-$(date +%s)" --ssh
+
+      - name: Keep runner alive for 6 hours
+        run: |
+          echo "Runner active. Sleeping for 6 hours..."
+          sleep 21600
