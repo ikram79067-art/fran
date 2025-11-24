@@ -30,7 +30,7 @@ jobs:
           sudo tailscale up \
             --authkey="tskey-auth-kSctKbzvcG11CNTRL-KMx1PV6EjK3zNxdkUdqzK3dzDieMHL6h" \
             --hostname="macos-runner-$(date +%s)" \
-            --ssh \
+            --ssh 
            
 
       - name: Show Tailscale status
