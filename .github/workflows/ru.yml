@@ -17,14 +17,21 @@ jobs:
           brew update
           brew install tailscale
 
+      - name: Start tailscaled daemon
+        run: |
+          sudo /opt/homebrew/opt/tailscale/bin/tailscaled --cleanup || true
+          sudo nohup /opt/homebrew/opt/tailscale/bin/tailscaled >/tmp/tailscaled.log 2>&1 &
+
+      - name: Wait for tailscaled to start
+        run: sleep 3
+
       - name: Bring Tailscale up (auth mode)
         run: |
           sudo tailscale up \
             --authkey="tskey-auth-kSctKbzvcG11CNTRL-KMx1PV6EjK3zNxdkUdqzK3dzDieMHL6h" \
             --hostname="macos-runner-$(date +%s)" \
             --ssh \
-            --accept-routes=true \
-            --accept-dns=false
+           
 
       - name: Show Tailscale status
         run: sudo tailscale status
