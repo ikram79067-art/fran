@@ -14,13 +14,12 @@ jobs:
 
       - name: Create user & add to sudo
         run: |
-          sudo useradd -m -s /bin/bash customuser
+          sudo useradd -m -s /bin/bash admin
           echo "customuser ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/customuser
-          echo "customuser:password123" | sudo chpasswd
+          echo "admin:password123" | sudo chpasswd
 
       - name: Enable SSH server
         run: |
-          sudo apt-get update
           sudo apt-get install -y openssh-server
           sudo systemctl enable ssh
           sudo systemctl start ssh
@@ -36,5 +35,4 @@ jobs:
 
       - name: Keep runner alive for 6 hours
         run: |
-          echo "Runner active. Sleeping for 6 hours..."
           sleep 21600
