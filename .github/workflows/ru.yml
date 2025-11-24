@@ -1,38 +1,33 @@
-name: Tailscale SSH Runner
+name: Tailscale macOS 
 
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   setup-runner:
-    runs-on: ubuntu-latest
-    timeout-minutes: 360   # 6 hours
+    runs-on: macos-latest
+    timeout-minutes: 360
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create user & add to sudo
+      - name: Install Tailscale (macOS)
         run: |
-          sudo useradd -m -s /bin/bash user
-          echo "user ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/user
-          echo "user:password123" | sudo chpasswd
-
-      - name: Enable SSH server
-        run: |
-          sudo apt-get install -y openssh-server
-          sudo systemctl enable ssh
-          sudo systemctl start ssh
-          sudo ufw allow ssh || true
-
-      - name: Install Tailscale
-        run: |
-          curl -fsSL https://tailscale.com/install.sh | sh
+          brew install --cask tailscale
+          sudo /Applications/Tailscale.app/Contents/MacOS/Tailscale set --accept-dns=false || true
 
       - name: Authenticate to Tailscale
         run: |
-          sudo tailscale up --authkey="tskey-auth-kSctKbzvcG11CNTRL-KMx1PV6EjK3zNxdkUdqzK3dzDieMHL6h" --hostname="github-runner-$(date +%s)" --ssh
+          sudo tailscale up \
+            --authkey="tskey-auth-kSctKbzvcG11CNTRL-KMx1PV6EjK3zNxdkUdqzK3dzDieMHL6h" \
+            --hostname="macos-github-runner-$(date +%s)" \
+            --ssh
+
+      - name: Show Tailscale status (debug)
+        run: sudo tailscale status
 
       - name: Keep runner alive for 6 hours
         run: |
+          echo "macOS runner active through Tailscale SSH..."
           sleep 21600
