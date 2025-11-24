@@ -1,33 +1,33 @@
-name: Tailscale macOS 
+name: Tailscale macOS SSH Runner
 
 on:
   workflow_dispatch:
 
 jobs:
-  setup-runner:
+  macos-runner:
     runs-on: macos-latest
     timeout-minutes: 360
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install Tailscale (macOS)
+      - name: Install Tailscale CLI (NO GUI, NO KEXT)
         run: |
-          brew install --cask tailscale
-          sudo /Applications/Tailscale.app/Contents/MacOS/Tailscale set --accept-dns=false || true
+          brew update
+          brew install tailscale
 
-      - name: Authenticate to Tailscale
+      - name: Bring Tailscale up (auth mode)
         run: |
           sudo tailscale up \
             --authkey="tskey-auth-kSctKbzvcG11CNTRL-KMx1PV6EjK3zNxdkUdqzK3dzDieMHL6h" \
-            --hostname="macos-github-runner-$(date +%s)" \
-            --ssh
+            --hostname="macos-runner-$(date +%s)" \
+            --ssh \
+            --accept-routes=true \
+            --accept-dns=false
 
-      - name: Show Tailscale status (debug)
+      - name: Show Tailscale status
         run: sudo tailscale status
 
-      - name: Keep runner alive for 6 hours
-        run: |
-          echo "macOS runner active through Tailscale SSH..."
-          sleep 21600
+      - name: Keep runner alive
+        run: sleep 21600
